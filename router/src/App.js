@@ -9,16 +9,10 @@ import { BrowserRouter as Router, Route, Link, } from 'react-router-dom'
 
 /* some data */
 
-const sheepArray = [
+const initSheepArray = [
   { name: 'Harry', age: 4, },
   { name: 'Nora', age: 2, },
 ]
-
-/* click handler */
-
-const addSheepToArray = ({ name, age, }) => {
-  console.log({ name, age, });
-}
 
 /* components */
 
@@ -31,16 +25,18 @@ const Home = () => (
 
 const About = () => ( <h1>About</h1> )
 
-const List = () => (
+const List = ({ sheepArray, addSheepToArray, }) => {
+
+  return (
   <div>
     <h1>Sheep</h1>
     <ul>
       { sheepArray.map(sheep => <li key={sheep.name}>{sheep.name}</li>) }
     </ul>
     <h2>Add a sheep</h2>
-    <Form/>
-  </div>
-)
+    <Form sheepArray={ sheepArray} addSheepToArray={ addSheepToArray }/>
+  </div>)
+}
 
 class Form extends Component {
 
@@ -62,7 +58,7 @@ class Form extends Component {
   }
 
   handleSubmit(event) {
-    addSheepToArray(this.state)
+    this.props.addSheepToArray(this.state)
   }
 
   render() {
@@ -73,15 +69,13 @@ class Form extends Component {
         <br/>
         <label htmlFor="age">Age</label>
         <input id="age" type="number" onChange={this.changeAge} value={this.state.age} />
-        <a onClick={this.handleSubmit}>
-          Add
-        </a>
+        <a onClick={this.handleSubmit}>Add</a>
       </form>
     )
   }
 }
 
-const Sheep = ({ match, }) => {
+const Sheep = ({ match, sheepArray, addSheepToArray }) => {
   const matchingSheep = sheepArray.find((sheep) => sheep.name.toLowerCase() === match.params.name);
   return (
     <div>
@@ -93,17 +87,40 @@ const Sheep = ({ match, }) => {
 
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = { sheepArray: initSheepArray, }
+
+    this.addSheepToArray = this.addSheepToArray.bind(this)
+  }
+
+  addSheepToArray({ name, age, }) {
+    this.setState({ sheepArray: this.state.sheepArray.concat({ name, age, })})
+  }
+
   render() {
     return (
       <Router>
         <div>
           <p><Link to="/">Home</Link></p>
           <p><Link to="/about">About</Link></p>
-          <Route exact path="/" component={Home} />
 
+          <Route exact path="/" component={Home} />
           <Route path="/about" component={About} />
-          <Route path="/list" component={List} />
-          <Route path="/sheep/:name" component={Sheep} value={2}/>
+          <Route
+            path="/list"
+            component={ ({ match, }) =>
+              <List
+                match={ match }
+                sheepArray={ this.state.sheepArray }
+                addSheepToArray={ this.addSheepToArray }
+              />
+            }
+          />
+          <Route path="/sheep/:name" component={ ({ match, }) =>
+            <Sheep match={match} sheepArray={this.props.sheepArray} /> }/>
         </div>
       </Router>
     );
