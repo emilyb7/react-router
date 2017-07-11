@@ -29,10 +29,14 @@ const List = ({ sheepArray, addSheepToArray, }) => (
   <div>
     <h1>Sheep</h1>
     <ul>
-      { sheepArray.map(sheep => <li key={sheep.name}>{sheep.name}</li>) }
+      { sheepArray.map(({ name, }) =>
+        <li key={ name }>
+          <Link to={`sheep/${name}`}>{name}</Link>
+        </li>)
+      }
     </ul>
     <h2>Add a sheep</h2>
-    <Form sheepArray={ sheepArray} addSheepToArray={ addSheepToArray }/>
+    <Form sheepArray={ sheepArray} addSheepToArray={ addSheepToArray } />
   </div>
 )
 
@@ -74,7 +78,8 @@ class Form extends Component {
 }
 
 const Sheep = ({ match, sheepArray, addSheepToArray }) => {
-  const matchingSheep = sheepArray.find((sheep) => sheep.name.toLowerCase() === match.params.name);
+  const matchingSheep = sheepArray.find((sheep) => sheep.name === match.params.name);
+  console.log({ matchingSheep, });
   return (
     <div>
       <h1>{ matchingSheep.name }</h1>
@@ -118,7 +123,7 @@ class App extends Component {
             }
           />
           <Route path="/sheep/:name" component={ ({ match, }) =>
-            <Sheep match={match} sheepArray={this.props.sheepArray} /> }/>
+            <Sheep match={match} sheepArray={this.state.sheepArray} /> }/>
         </div>
       </Router>
     );
