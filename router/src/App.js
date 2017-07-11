@@ -61,6 +61,7 @@ class Form extends Component {
 
   handleSubmit(event) {
     this.props.addSheepToArray(this.state)
+    event.preventDefault()
   }
 
   render() {
@@ -71,7 +72,7 @@ class Form extends Component {
         <br/>
         <label htmlFor="age">Age</label>
         <input id="age" type="number" onChange={this.changeAge} value={this.state.age} />
-        <a onClick={this.handleSubmit}>Add</a>
+        <button onClick={this.handleSubmit}>Add</button>
       </form>
     )
   }
