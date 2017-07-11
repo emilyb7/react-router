@@ -14,6 +14,12 @@ const sheepArray = [
   { name: 'Nora', age: 2, },
 ]
 
+/* click handler */
+
+const addSheepToArray = ({ name, age, }) => {
+  console.log({ name, age, });
+}
+
 /* components */
 
 const Home = () => (
@@ -32,11 +38,48 @@ const List = () => (
       { sheepArray.map(sheep => <li key={sheep.name}>{sheep.name}</li>) }
     </ul>
     <h2>Add a sheep</h2>
-    <form>
-
-    </form>
+    <Form/>
   </div>
 )
+
+class Form extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = { name: '', age: '', }
+
+    this.changeName = this.changeName.bind(this)
+    this.changeAge = this.changeAge.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  changeName(event) {
+    this.setState({ ...this.state, name: event.target.value, })
+  }
+
+  changeAge(event) {
+    this.setState({ ...this.state, age: event.target.value, })
+  }
+
+  handleSubmit(event) {
+    addSheepToArray(this.state)
+  }
+
+  render() {
+    return (
+      <form>
+        <label htmlFor="name">Name</label>
+        <input id="name" type="text" onChange={this.changeName} value={this.state.name} />
+        <br/>
+        <label htmlFor="age">Age</label>
+        <input id="age" type="number" onChange={this.changeAge} value={this.state.age} />
+        <a onClick={this.handleSubmit}>
+          Add
+        </a>
+      </form>
+    )
+  }
+}
 
 const Sheep = ({ match, }) => {
   const matchingSheep = sheepArray.find((sheep) => sheep.name.toLowerCase() === match.params.name);
@@ -60,7 +103,7 @@ class App extends Component {
 
           <Route path="/about" component={About} />
           <Route path="/list" component={List} />
-          <Route path="/sheep/:name" component={Sheep}/>
+          <Route path="/sheep/:name" component={Sheep} value={2}/>
         </div>
       </Router>
     );
