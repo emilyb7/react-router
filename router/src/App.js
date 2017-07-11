@@ -25,9 +25,7 @@ const Home = () => (
 
 const About = () => ( <h1>About</h1> )
 
-const List = ({ sheepArray, addSheepToArray, }) => {
-
-  return (
+const List = ({ sheepArray, addSheepToArray, }) => (
   <div>
     <h1>Sheep</h1>
     <ul>
@@ -35,8 +33,8 @@ const List = ({ sheepArray, addSheepToArray, }) => {
     </ul>
     <h2>Add a sheep</h2>
     <Form sheepArray={ sheepArray} addSheepToArray={ addSheepToArray }/>
-  </div>)
-}
+  </div>
+)
 
 class Form extends Component {
 
